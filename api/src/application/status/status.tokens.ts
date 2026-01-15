@@ -1,0 +1,2 @@
+export const STATUS_REPOSITORY = "STATUS_REPOSITORY";
+export const DEMO_QUEUE = "DEMO_QUEUE";

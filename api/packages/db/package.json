@@ -1,0 +1,33 @@
+{
+  "name": "@acme/db",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "db:build": "node ./scripts/build-schema.mjs",
+    "db:generate": "npm run db:build && PRISMA_CLIENT_ENGINE_TYPE=binary prisma generate --schema prisma/schema/schema.prisma",
+    "db:push": "npm run db:build && PRISMA_CLIENT_ENGINE_TYPE=binary prisma db push --schema prisma/schema/schema.prisma",
+    "db:migrate:dev": "npm run db:build && PRISMA_CLIENT_ENGINE_TYPE=binary prisma migrate dev --schema prisma/schema/schema.prisma",
+    "db:migrate:deploy": "npm run db:build && PRISMA_CLIENT_ENGINE_TYPE=binary prisma migrate deploy --schema prisma/schema/schema.prisma",
+    "db:status": "npm run db:build && PRISMA_CLIENT_ENGINE_TYPE=binary prisma migrate status --schema prisma/schema/schema.prisma",
+    "db:studio": "npm run db:build && PRISMA_CLIENT_ENGINE_TYPE=binary prisma studio --schema prisma/schema/schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "pg": "^8.14.1",
+    "prisma": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.11",
+    "@prisma/config": "^7.2.0",
+    "@types/node": "^25.0.7",
+    "@prisma/client": "^7.2.0"
+  }
+}

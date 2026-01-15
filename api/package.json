@@ -1,0 +1,41 @@
+{
+  "name": "api",
+  "private": true,
+  "version": "0.0.1",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "node dist/main.js",
+    "start:dev": "npm run db:generate && /usr/local/bin/nest start --watch",
+    "build": "nest build",
+    "db:generate": "npm run -w @acme/db db:generate",
+    "db:build": "npm run -w @acme/db db:build",
+    "db:push": "npm run -w @acme/db db:push",
+    "db:studio": "npm run -w @acme/db db:studio",
+    "db:status": "npm run -w @acme/db db:status",
+    "db:migrate:dev": "npm run -w @acme/db db:migrate:dev",
+    "db:migrate:deploy": "npm run -w @acme/db db:migrate:deploy"
+  },
+  "dependencies": {
+    "@acme/db": "workspace:*",
+    "@nestjs/bullmq": "^10.0.0",
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.0.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/platform-express": "^10.0.0",
+    "bullmq": "^5.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.0.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.0.0",
+    "@acme/db": "workspace:*",
+    "@nestjs/schematics": "^10.0.0",
+    "@nestjs/testing": "^10.0.0",
+    "@types/node": "^25.0.7",
+    "typescript": "^5.0.0"
+  }
+}

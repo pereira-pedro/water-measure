@@ -1,0 +1,13 @@
+model WaterMeterMeasure {
+  id               String   @id @default(uuid()) @db.Uuid
+  waterMeterId     String   @db.Uuid @map("water_meter_id")
+
+  collectedCounter BigInt   @map("collected_counter")
+  collectedAt      DateTime @map("collected_at")
+
+  waterMeter       WaterMeter @relation(fields: [waterMeterId], references: [id], onDelete: Cascade)
+
+  @@index([waterMeterId], map: "idx_water_meter_measures_water_meter_id")
+  @@index([collectedAt], map: "idx_water_meter_measures_collected_at")
+  @@map("water_meter_measures")
+}

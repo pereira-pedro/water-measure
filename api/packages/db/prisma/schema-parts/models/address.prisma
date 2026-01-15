@@ -1,0 +1,22 @@
+model Address {
+    id     String @id @default(uuid()) @db.Uuid
+    userId String @map("user_id") @db.Uuid
+
+    street        String
+    neighbourhood String
+    city          String
+    state         String
+    country       String
+
+    latitude  Decimal? @db.Decimal(10, 7)
+    longitude Decimal? @db.Decimal(10, 7)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    waterMeters WaterMeter[]
+
+    @@index([userId], map: "idx_addresses_user_id")
+    @@map("addresses")
+}

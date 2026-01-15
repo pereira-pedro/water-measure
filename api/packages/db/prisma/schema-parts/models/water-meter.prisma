@@ -1,0 +1,18 @@
+model WaterMeter {
+  id                 String   @id @default(uuid()) @db.Uuid
+  userId             String   @db.Uuid @map("user_id")
+  addressId          String   @db.Uuid @map("address_id")
+
+  registrationNumber String   @map("registration_number")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address            Address  @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  measures           WaterMeterMeasure[]
+
+  @@unique([registrationNumber], map: "uq_water_meters_registration_number")
+  @@index([userId], map: "idx_water_meters_user_id")
+  @@index([addressId], map: "idx_water_meters_address_id")
+  @@map("water_meters")
+}
