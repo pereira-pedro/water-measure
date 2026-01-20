@@ -1,8 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { StatusModule } from "./modules/status.module";
-import { AuthenticationModule } from './modules/authentication.module';
-import { AuthenticationController } from './presentation/authentication/authentication.controller';
+import { AuthenticationModule } from "./modules/authentication.module";
 
 @Module({
   imports: [
@@ -13,6 +12,5 @@ import { AuthenticationController } from './presentation/authentication/authenti
     StatusModule,
     AuthenticationModule,
   ],
-  controllers: [AuthenticationController],
 })
 export class AppModule {}

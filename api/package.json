@@ -15,7 +15,8 @@
     "db:studio": "npm run -w @acme/db db:studio",
     "db:status": "npm run -w @acme/db db:status",
     "db:migrate:dev": "npm run -w @acme/db db:migrate:dev",
-    "db:migrate:deploy": "npm run -w @acme/db db:migrate:deploy"
+    "db:migrate:deploy": "npm run -w @acme/db db:migrate:deploy",
+    "routes": "tsx src/cli/routes.ts"
   },
   "dependencies": {
     "@acme/db": "workspace:*",
@@ -26,7 +27,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "bullmq": "^5.0.0",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
+    "class-validator": "^0.14.3",
     "mailgun.js": "^12.6.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.0.0",
@@ -38,6 +39,7 @@
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
     "@types/node": "^25.0.7",
+    "tsx": "^4.21.0",
     "typescript": "^5.0.0"
   }
 }

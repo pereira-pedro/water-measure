@@ -13,7 +13,6 @@ import { MAILGUN_CLIENT, MAILGUN_CONFIG } from "../../infrastructure/notificatio
   imports: [ConfigModule],
   providers: [
     SendEmailHandler,
-
     {
       provide: MAILGUN_CONFIG,
       inject: [ConfigService],
@@ -27,7 +26,6 @@ import { MAILGUN_CLIENT, MAILGUN_CONFIG } from "../../infrastructure/notificatio
         } as any);
       },
     },
-
     {
       provide: MAILGUN_CLIENT,
       inject: [MAILGUN_CONFIG],
@@ -38,7 +36,6 @@ import { MAILGUN_CLIENT, MAILGUN_CONFIG } from "../../infrastructure/notificatio
         });
       },
     },
-
     {
       provide: EMAIL_GATEWAY,
       inject: [MAILGUN_CLIENT, MAILGUN_CONFIG],
@@ -47,6 +44,6 @@ import { MAILGUN_CLIENT, MAILGUN_CONFIG } from "../../infrastructure/notificatio
       },
     },
   ],
-  exports: [SendEmailHandler],
+  exports: [SendEmailHandler, EMAIL_GATEWAY],
 })
 export class EmailModule {}

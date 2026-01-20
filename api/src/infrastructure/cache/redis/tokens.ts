@@ -1,0 +1,2 @@
+export const REDIS_CACHE_CONFIG = Symbol("REDIS_CACHE_CONFIG");
+export const REDIS_CACHE_CLIENT = Symbol("REDIS_CACHE_CLIENT");

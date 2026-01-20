@@ -5,7 +5,7 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     // If you want more logs:
-    // logger: ['log', 'error', 'warn', 'debug', 'verbose'],
+    logger: ["log", "error", "warn", "debug", "verbose"],
   });
 
   app.useGlobalPipes(
