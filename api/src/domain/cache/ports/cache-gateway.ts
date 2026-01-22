@@ -5,8 +5,8 @@ export type CacheWriteOptions = {
 };
 
 export interface CacheGateway {
-  get(key: CacheKey): Promise<string | null>;
-  set(key: CacheKey, value: string, options?: CacheWriteOptions): Promise<void>;
+  get<T>(key: CacheKey): Promise<T | null>;
+  set<T>(key: CacheKey, value: T, options?: CacheWriteOptions): Promise<void>;
   delete(key: CacheKey): Promise<void>;
   exists(key: CacheKey): Promise<boolean>;
 }

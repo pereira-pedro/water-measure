@@ -8,7 +8,7 @@ export class CacheService {
   constructor(@Inject(CACHE_GATEWAY) private readonly gateway: CacheGateway) {}
 
   async get<T>(key: CacheKey, codec: CacheCodec<T> = JsonCacheCodec as CacheCodec<T>): Promise<T | null> {
-    const raw = await this.gateway.get(key);
+    const raw = await this.gateway.get<string>(key);
     if (raw === null) {
       return null;
     }

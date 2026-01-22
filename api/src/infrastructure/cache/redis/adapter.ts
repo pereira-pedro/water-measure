@@ -5,18 +5,20 @@ import { RedisCacheClient } from "./client";
 export class RedisCacheAdapter implements CacheGateway {
   constructor(private readonly client: RedisCacheClient, private readonly keyPrefix?: string) {}
 
-  async get(key: CacheKey): Promise<string | null> {
-    return this.client.get(this.prefixKey(key));
+  async get<T = string>(key: CacheKey): Promise<T | null> {
+    const raw = await this.client.get(this.prefixKey(key));
+    return raw as T | null;
   }
 
-  async set(key: CacheKey, value: string, options?: CacheWriteOptions): Promise<void> {
+  async set<T>(key: CacheKey, value: T, options?: CacheWriteOptions): Promise<void> {
     const cacheKey = this.prefixKey(key);
+    const raw = this.serialize(value);
     if (options?.ttlSeconds && options.ttlSeconds > 0) {
-      await this.client.set(cacheKey, value, "EX", options.ttlSeconds);
+      await this.client.set(cacheKey, raw, "EX", options.ttlSeconds);
       return;
     }
 
-    await this.client.set(cacheKey, value);
+    await this.client.set(cacheKey, raw);
   }
 
   async delete(key: CacheKey): Promise<void> {
@@ -34,5 +36,16 @@ export class RedisCacheAdapter implements CacheGateway {
 
     const normalized = this.keyPrefix.endsWith(":") ? this.keyPrefix : `${this.keyPrefix}:`;
     return `${normalized}${key.value}`;
+  }
+
+  private serialize(value: unknown): string {
+    if (value === undefined) {
+      throw new Error("Cannot cache undefined value");
+    }
+    if (typeof value === "string") {
+      return value;
+    }
+
+    return JSON.stringify(value);
   }
 }

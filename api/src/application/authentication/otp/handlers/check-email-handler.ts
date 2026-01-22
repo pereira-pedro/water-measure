@@ -1,0 +1,48 @@
+import { Inject, Injectable } from "@nestjs/common";
+import { CheckOtpEmailCommand } from "../../otp/commands/check-email-command";
+import { CacheKey } from "../../../../domain/cache/models/cache-key";
+import { CACHE_GATEWAY, CacheGateway } from "src/domain/cache/ports/cache-gateway";
+import { USER_REPOSITORY, UserRepository } from "src/domain/authentication/ports/user-repository";
+import { User } from "../../../../domain/authentication/models/user";
+import { CheckOtpResult } from "src/domain/authentication/dto/check-otp-result";
+import { StartRegistrationHandler } from "../../registration/handlers/start-registration.handler";
+import { StartRegistrationCommand } from "../../registration/commands/start-registration.command";
+
+@Injectable()
+export class CheckOtpEmailHandler {
+  constructor(
+    @Inject(CACHE_GATEWAY) private readonly cacheGateway: CacheGateway,
+    @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository
+  ) {}
+  async execute(cmd: CheckOtpEmailCommand): Promise<CheckOtpResult> {
+    const isValid = await this.checkOtp(cmd.email, cmd.otp);
+    if (!isValid) {
+      return { isValid: false } as CheckOtpResult;
+    }
+
+    const user = await this.findUserByEmail(cmd.email);
+    if (user) {
+      return { isValid: true, user } as CheckOtpResult;
+    }
+
+    return this.startUserRegistration(cmd.email);
+  }
+
+  private async checkOtp(email: string, otp: string): Promise<boolean> {
+    const key = CacheKey.fromParts("authentication-otp", email);
+    const cachedOtp = await this.cacheGateway.get(key);
+    return cachedOtp === otp;
+  }
+
+  private async findUserByEmail(email: string): Promise<User | null> {
+    return await this.userRepository.findByEmail(email);
+  }
+
+  private async startUserRegistration(email: string): Promise<CheckOtpResult> {
+    return new StartRegistrationHandler(this.cacheGateway)
+      .execute({ email } as StartRegistrationCommand)
+      .then((registration) => {
+        return { isValid: true, registration } as CheckOtpResult;
+      });
+  }
+}

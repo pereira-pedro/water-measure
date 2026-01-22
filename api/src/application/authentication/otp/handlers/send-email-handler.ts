@@ -3,7 +3,7 @@ import { EmailDelivery } from "../../../../domain/notification/email/models/emai
 import { EmailMessage } from "../../../../domain/notification/email/models/email-message";
 import { EmailRecipient } from "../../../../domain/notification/email/models/email-recipient";
 import { EMAIL_GATEWAY, EmailGateway } from "../../../../domain/notification/email/ports/email-gateway";
-import { SendOtpEmailCommand } from "../../commands/otp/send-email-command";
+import { SendOtpEmailCommand } from "../../otp/commands/send-email-command";
 import { CacheKey } from "../../../../domain/cache/models/cache-key";
 import { CACHE_GATEWAY, CacheGateway } from "src/domain/cache/ports/cache-gateway";
 

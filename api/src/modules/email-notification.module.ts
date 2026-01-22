@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 
-import { EMAIL_GATEWAY } from "../../domain/notification/email/ports/email-gateway";
-import { SendEmailHandler } from "../../application/notification/email/handlers/send-email-handler";
+import { EMAIL_GATEWAY } from "../domain/notification/email/ports/email-gateway";
+import { SendEmailHandler } from "../application/notification/email/handlers/send-email-handler";
 
-import { MailgunEmailAdapter } from "../../infrastructure/notification/email/mailgun/adapter";
-import { createMailgunClient, type MailgunClient } from "../../infrastructure/notification/email/mailgun/client";
-import { loadMailgunConfig, type MailgunConfig } from "../../infrastructure/notification/email/mailgun/config";
-import { MAILGUN_CLIENT, MAILGUN_CONFIG } from "../../infrastructure/notification/email/mailgun/tokens";
+import { MailgunEmailAdapter } from "../infrastructure/notification/email/mailgun/adapter";
+import { createMailgunClient, type MailgunClient } from "../infrastructure/notification/email/mailgun/client";
+import { loadMailgunConfig, type MailgunConfig } from "../infrastructure/notification/email/mailgun/config";
+import { MAILGUN_CLIENT, MAILGUN_CONFIG } from "../infrastructure/notification/email/mailgun/tokens";
 
 @Module({
   imports: [ConfigModule],
@@ -46,4 +46,4 @@ import { MAILGUN_CLIENT, MAILGUN_CONFIG } from "../../infrastructure/notificatio
   ],
   exports: [SendEmailHandler, EMAIL_GATEWAY],
 })
-export class EmailModule {}
+export class EmailNotificationModule {}
