@@ -11,8 +11,9 @@ export class UpdateRegistrationHandler {
 
   async execute(cmd: UpdateRegistrationCommand): Promise<User> {
     const user = await this.fetchRegistrationData(cmd.token);
-    Object.assign(user, cmd.data);
+    const updatedData = this.pick<User, keyof User>(cmd.data, User.fillable());
 
+    Object.assign(user, updatedData);
     await this.saveUpdatedData(cmd.token, user);
 
     return user;
@@ -31,5 +32,17 @@ export class UpdateRegistrationHandler {
   private async saveUpdatedData(token: string, user: User): Promise<void> {
     const key = CacheKey.fromParts("registration", token);
     await this.cacheService.set(key, user, { ttlSeconds: 3600 });
+  }
+
+  private pick<T extends object, K extends keyof T>(src: Partial<T>, keys: K[]): Pick<T, K> {
+    const out = {} as Pick<T, K>;
+    for (const k of keys) {
+      if (src[k] === undefined) {
+        continue;
+      }
+
+      out[k] = src[k] as T[K];
+    }
+    return out;
   }
 }

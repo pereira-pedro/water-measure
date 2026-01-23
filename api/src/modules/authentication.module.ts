@@ -6,6 +6,8 @@ import { CacheModule } from "./cache.module";
 import { CheckOtpEmailHandler } from "src/application/authentication/otp/handlers/check-email-handler";
 import { StartRegistrationHandler } from "src/application/authentication/registration/handlers/start-registration.handler";
 import { UpdateRegistrationHandler } from "src/application/authentication/registration/handlers/update-registration.handler";
+import { CommitRegistrationHandler } from "src/application/authentication/registration/handlers/commit-registration.handler";
+import { CreateUserHandler } from "src/application/authentication/user/handlers/create-user.handler";
 import { USER_REPOSITORY } from "../domain/authentication/ports/user-repository";
 import { PrismaUserRepository } from "../infrastructure/authentication/user/prisma-user.repository";
 
@@ -17,6 +19,8 @@ import { PrismaUserRepository } from "../infrastructure/authentication/user/pris
     CheckOtpEmailHandler,
     StartRegistrationHandler,
     UpdateRegistrationHandler,
+    CommitRegistrationHandler,
+    CreateUserHandler,
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,

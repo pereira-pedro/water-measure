@@ -11,7 +11,6 @@ export class StatusController {
     private readonly getHealthQuery: GetHealthQuery,
     private readonly getDatabaseNowQuery: GetDatabaseNowQuery,
     private readonly getDatabaseTablesQuery: GetDatabaseTablesQuery,
-
     private readonly enqueueDemoCommand: EnqueueDemoCommand
   ) {}
 

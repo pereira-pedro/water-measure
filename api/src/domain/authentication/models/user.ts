@@ -4,7 +4,7 @@ export class User {
     public readonly fullName: string,
     public readonly email: string,
     public readonly createdAt: Date,
-    public readonly updatedAt: Date
+    public readonly updatedAt: Date,
   ) {}
 
   static create(params: {
@@ -24,5 +24,9 @@ export class User {
     const updatedAt = params.updatedAt ?? createdAt;
 
     return new User(params.id ?? null, fullName, email, createdAt, updatedAt);
+  }
+
+  static fillable(): (keyof User)[] {
+    return ["fullName"];
   }
 }
