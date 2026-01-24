@@ -7,12 +7,15 @@ import { User } from "../../../../domain/authentication/models/user";
 import { CheckOtpResult } from "src/domain/authentication/dto/check-otp-result";
 import { StartRegistrationHandler } from "../../registration/handlers/start-registration.handler";
 import { StartRegistrationCommand } from "../../registration/commands/start-registration.command";
+import { CreateTokenHandler } from "../../token/handlers/create-token.handler";
+import { CreateTokenCommand } from "../../token/commands/create-token.command";
 
 @Injectable()
 export class CheckOtpEmailHandler {
   constructor(
     @Inject(CACHE_GATEWAY) private readonly cacheGateway: CacheGateway,
-    @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository
+    @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository,
+    private readonly createTokenHandler: CreateTokenHandler,
   ) {}
   async execute(cmd: CheckOtpEmailCommand): Promise<CheckOtpResult> {
     const isValid = await this.checkOtp(cmd.email, cmd.otp);
@@ -22,7 +25,8 @@ export class CheckOtpEmailHandler {
 
     const user = await this.findUserByEmail(cmd.email);
     if (user) {
-      return { isValid: true, user } as CheckOtpResult;
+      const awt = await this.createTokenHandler.execute({ userId: user.id } as CreateTokenCommand);
+      return { isValid: true, user, token: awt.token } as CheckOtpResult;
     }
 
     return this.startUserRegistration(cmd.email);

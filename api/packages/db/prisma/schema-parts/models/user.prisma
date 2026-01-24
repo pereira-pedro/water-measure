@@ -6,6 +6,7 @@ model User {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   addresses   Address[]
+  authTokens  AuthToken[]
   waterMeters WaterMeter[]
 
   @@map("users")

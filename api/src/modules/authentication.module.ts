@@ -10,6 +10,10 @@ import { CommitRegistrationHandler } from "src/application/authentication/regist
 import { CreateUserHandler } from "src/application/authentication/user/handlers/create-user.handler";
 import { USER_REPOSITORY } from "../domain/authentication/ports/user-repository";
 import { PrismaUserRepository } from "../infrastructure/authentication/user/prisma-user.repository";
+import { CreateTokenHandler } from "src/application/authentication/token/handlers/create-token.handler";
+import { VerifyTokenHandler } from "src/application/authentication/token/handlers/verify-token.handler";
+import { TOKEN_REPOSITORY } from "src/domain/authentication/token/token-repository";
+import { PrismaTokenRepository } from "src/infrastructure/authentication/token/prisma-token.repository";
 
 @Module({
   imports: [CacheModule, EmailNotificationModule],
@@ -21,9 +25,15 @@ import { PrismaUserRepository } from "../infrastructure/authentication/user/pris
     UpdateRegistrationHandler,
     CommitRegistrationHandler,
     CreateUserHandler,
+    CreateTokenHandler,
+    VerifyTokenHandler,
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,
+    },
+    {
+      provide: TOKEN_REPOSITORY,
+      useClass: PrismaTokenRepository,
     },
   ],
 })
