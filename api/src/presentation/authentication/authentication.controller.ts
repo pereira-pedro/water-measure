@@ -1,4 +1,5 @@
 import { BadRequestException, Body, Controller, Post, Put, Param } from "@nestjs/common";
+import { Public } from "../common/decorators/public.decorator";
 import { SendOtpEmailCommand } from "../../application/authentication/otp/commands/send-email-command";
 import { SendOtpEmailHandler } from "../../application/authentication/otp/handlers/send-email-handler";
 import { CheckOtpEmailRequest } from "./dto/check-otp-email.request";
@@ -12,6 +13,7 @@ import { UpdateRegistrationHandler } from "src/application/authentication/regist
 import { CommitRegistrationHandler } from "src/application/authentication/registration/handlers/commit-registration.handler";
 import { UpdateRegistrationRequest } from "./dto/update-registration-request";
 
+@Public()
 @Controller("auth")
 export class AuthenticationController {
   constructor(
@@ -19,7 +21,7 @@ export class AuthenticationController {
     private readonly checkOtpEmailHandler: CheckOtpEmailHandler,
     private readonly startRegistrationHandler: StartRegistrationHandler,
     private readonly updateRegistrationHandler: UpdateRegistrationHandler,
-    private readonly commitRegistrationHandler: CommitRegistrationHandler
+    private readonly commitRegistrationHandler: CommitRegistrationHandler,
   ) {}
 
   @Post("send-otp-email")

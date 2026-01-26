@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post, Query } from "@nestjs/common";
+import { Public } from "../common/decorators/public.decorator";
 import { EnqueueDemoCommand } from "../../application/status/commands/enqueue-demo.command";
 import { GetDatabaseNowQuery } from "../../application/status/queries/get-database-now.query";
 import { GetDatabaseTablesQuery } from "../../application/status/queries/get-database-tables.query";
@@ -11,10 +12,11 @@ export class StatusController {
     private readonly getHealthQuery: GetHealthQuery,
     private readonly getDatabaseNowQuery: GetDatabaseNowQuery,
     private readonly getDatabaseTablesQuery: GetDatabaseTablesQuery,
-    private readonly enqueueDemoCommand: EnqueueDemoCommand
+    private readonly enqueueDemoCommand: EnqueueDemoCommand,
   ) {}
 
   @Get("health")
+  @Public()
   health() {
     return this.getHealthQuery.execute();
   }

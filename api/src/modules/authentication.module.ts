@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { APP_GUARD } from "@nestjs/core";
 import { AuthenticationController } from "../presentation/authentication/authentication.controller";
 import { SendOtpEmailHandler } from "../application/authentication/otp/handlers/send-email-handler";
 import { EmailNotificationModule } from "./email-notification.module";
@@ -14,11 +15,16 @@ import { CreateTokenHandler } from "src/application/authentication/token/handler
 import { VerifyTokenHandler } from "src/application/authentication/token/handlers/verify-token.handler";
 import { TOKEN_REPOSITORY } from "src/domain/authentication/token/token-repository";
 import { PrismaTokenRepository } from "src/infrastructure/authentication/token/prisma-token.repository";
+import { JwtAuthGuard } from "../presentation/common/guards/jwt-auth.guard";
 
 @Module({
   imports: [CacheModule, EmailNotificationModule],
   controllers: [AuthenticationController],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
     SendOtpEmailHandler,
     CheckOtpEmailHandler,
     StartRegistrationHandler,
