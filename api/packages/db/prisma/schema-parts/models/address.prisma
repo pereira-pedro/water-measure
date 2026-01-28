@@ -2,21 +2,23 @@ model Address {
     id     String @id @default(uuid()) @db.Uuid
     userId String @map("user_id") @db.Uuid
 
-    street        String
-    neighbourhood String
-    city          String
-    state         String
-    country       String
+    street        String  @db.VarChar(255)
+    street_number String  @db.VarChar(50)
+    neighborhood  String? @db.VarChar(64)
+    city          String  @db.VarChar(128)
+    province      String  @db.VarChar(64)
+    postal_code   String  @db.VarChar(16)
+    country       String  @default("IT") @db.VarChar(8)
 
-    latitude  Decimal? @db.Decimal(10, 7)
-    longitude Decimal? @db.Decimal(10, 7)
+    location Unsupported("geometry(Point, 4326)")? @map("location")
 
     createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+    updatedAt DateTime @default(now()) @map("updated_at")
 
     user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
     waterMeters WaterMeter[]
 
     @@index([userId], map: "idx_addresses_user_id")
+    @@index([location], map: "idx_addresses_location", type: Gist)
     @@map("addresses")
 }

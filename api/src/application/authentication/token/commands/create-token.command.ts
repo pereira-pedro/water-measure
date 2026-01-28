@@ -1,5 +1,4 @@
 export type CreateTokenCommand = {
   userId: string;
-  scope?: string;
-  ttlSeconds?: number;
-};
+  ttlMinutes: number;
+  scope: string;};

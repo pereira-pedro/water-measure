@@ -16,14 +16,14 @@ export class CreateTokenHandler {
   constructor(@Inject(TOKEN_REPOSITORY) private readonly tokenRepository: TokenRepository) {}
 
   async execute(cmd: CreateTokenCommand): Promise<CreateTokenResult> {
-    const ttlSeconds = cmd.ttlSeconds ?? 3600;
+    const ttlSeconds = cmd.ttlMinutes * 60;
     const secret = this.getSecret();
     const tokenValue = jwt.sign(
       {
-        scope: cmd.scope ?? "default",
+        scope: cmd.scope,
       },
       secret,
-      { expiresIn: ttlSeconds, subject: cmd.userId }
+      { expiresIn: ttlSeconds, subject: cmd.userId },
     );
     const expiresAt = new Date(Date.now() + ttlSeconds * 1000);
 
@@ -52,6 +52,4 @@ export class CreateTokenHandler {
 
     return secret;
   }
-
-  
 }

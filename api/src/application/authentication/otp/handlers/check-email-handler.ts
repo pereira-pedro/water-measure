@@ -25,7 +25,11 @@ export class CheckOtpEmailHandler {
 
     const user = await this.findUserByEmail(cmd.email);
     if (user) {
-      const awt = await this.createTokenHandler.execute({ userId: user.id } as CreateTokenCommand);
+      const awt = await this.createTokenHandler.execute({
+        userId: user.id,
+        scope: "user",
+        ttlMinutes: 525600 * 5, // 5 years
+      } as CreateTokenCommand);
       return { isValid: true, user, token: awt.token } as CheckOtpResult;
     }
 
