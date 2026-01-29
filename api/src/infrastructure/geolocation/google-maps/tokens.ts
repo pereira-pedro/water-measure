@@ -1,0 +1,2 @@
+export const GOOGLE_MAPS_CLIENT = Symbol("GOOGLE_MAPS_CLIENT");
+export const GOOGLE_MAPS_CONFIG = Symbol("GOOGLE_MAPS_CONFIG");

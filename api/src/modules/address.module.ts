@@ -7,8 +7,10 @@ import { GetAddressByIdHandler } from "../application/address/handlers/get-addre
 import { ListAddressesHandler } from "../application/address/handlers/list-addresses.handler";
 import { ADDRESS_REPOSITORY } from "../domain/address/ports/address-repository";
 import { PrismaAddressRepository } from "../infrastructure/address/prisma-address.repository";
+import { GeolocationModule } from "./geolocation.module";
 
 @Module({
+  imports: [GeolocationModule],
   controllers: [AddressController],
   providers: [
     CreateAddressHandler,
