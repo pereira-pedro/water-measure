@@ -5,18 +5,18 @@ export type AddressLocation = {
 
 export class Address {
   private constructor(
-    public readonly id: string | null,
-    public readonly userId: string,
-    public readonly street: string,
-    public readonly streetNumber: string,
-    public readonly neighborhood: string | null,
-    public readonly city: string,
-    public readonly province: string,
-    public readonly postalCode: string,
-    public readonly country: string,
-    public readonly location: AddressLocation | null,
-    public readonly createdAt: Date,
-    public readonly updatedAt: Date,
+    public id: string | null,
+    public userId: string,
+    public street: string,
+    public streetNumber: string,
+    public neighborhood: string | null,
+    public city: string,
+    public province: string,
+    public postalCode: string,
+    public country: string,
+    public location: AddressLocation | null,
+    public createdAt: Date,
+    public updatedAt: Date,
   ) {}
 
   static create(params: {

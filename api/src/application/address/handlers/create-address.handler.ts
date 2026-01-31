@@ -11,7 +11,7 @@ export class CreateAddressHandler {
     private readonly geocodeAddressHandler: GeocodeAddressHandler,
   ) {}
 
-  async execute(cmd: CreateAddressCommand): Promise<Address> {
+  async execute(cmd: CreateAddressCommand, tx?: unknown): Promise<Address> {
     const location = await resolveLocation(this.geocodeAddressHandler, cmd);
     const address = Address.create({
       userId: cmd.userId,
@@ -25,7 +25,7 @@ export class CreateAddressHandler {
       location,
     });
 
-    return this.addressRepository.create(address);
+    return this.addressRepository.create(address, tx);
   }
 }
 

@@ -1,48 +1,29 @@
 import { Injectable } from "@nestjs/common";
 import { CacheKey } from "../../../../domain/cache/models/cache-key";
 import { CacheService } from "../../../cache/cache.service";
-import { User } from "../../../../domain/authentication/models/user";
-import { RegistrationTokenNotFoundException } from "../../../../domain/authentication/exceptions/registration-token-not-found.exception";
+import { RegistrationData } from "../../../../domain/authentication/valueobject/registration-data";
 import { UpdateRegistrationCommand } from "../commands/update-registration.command";
+import { FetchRegistrationHandler } from "./fetch-registration.handler";
 
 @Injectable()
 export class UpdateRegistrationHandler {
-  constructor(private readonly cacheService: CacheService) {}
+  constructor(
+    private readonly cacheService: CacheService,
+    private readonly fetchRegistrationHandler: FetchRegistrationHandler,
+  ) {}
 
-  async execute(cmd: UpdateRegistrationCommand): Promise<User> {
-    const user = await this.fetchRegistrationData(cmd.token);
-    const updatedData = this.pick<User, keyof User>(cmd.data, User.fillable());
+  async execute(cmd: UpdateRegistrationCommand): Promise<RegistrationData> {
+    const registrationData: RegistrationData = await this.fetchRegistrationHandler.execute({ token: cmd.token });
 
-    Object.assign(user, updatedData);
-    await this.saveUpdatedData(cmd.token, user);
+    registrationData.merge(cmd.data);
 
-    return user;
+    await this.saveUpdatedData(cmd.token, registrationData);
+
+    return registrationData;
   }
 
-  private fetchRegistrationData(token: string): Promise<User> {
+  private async saveUpdatedData(token: string, registrationData: RegistrationData): Promise<void> {
     const key = CacheKey.fromParts("registration", token);
-    return this.cacheService.get<User>(key).then((data) => {
-      if (!data) {
-        throw new RegistrationTokenNotFoundException(token);
-      }
-      return data;
-    });
-  }
-
-  private async saveUpdatedData(token: string, user: User): Promise<void> {
-    const key = CacheKey.fromParts("registration", token);
-    await this.cacheService.set(key, user, { ttlSeconds: 3600 });
-  }
-
-  private pick<T extends object, K extends keyof T>(src: Partial<T>, keys: K[]): Pick<T, K> {
-    const out = {} as Pick<T, K>;
-    for (const k of keys) {
-      if (src[k] === undefined) {
-        continue;
-      }
-
-      out[k] = src[k] as T[K];
-    }
-    return out;
+    await this.cacheService.set(key, registrationData, { ttlSeconds: 3600 });
   }
 }

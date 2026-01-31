@@ -3,13 +3,15 @@ import crypto from "node:crypto";
 import { Prisma, prisma } from "@acme/db";
 import { Address, AddressLocation } from "../../domain/address/models/address";
 import { AddressRepository } from "../../domain/address/ports/address-repository";
+import { TransactionContext } from "../../domain/transaction/ports/transaction-manager";
 
 @Injectable()
 export class PrismaAddressRepository implements AddressRepository {
-  async create(address: Address): Promise<Address> {
+  async create(address: Address, tx?: TransactionContext): Promise<Address> {
     const id = address.id ?? crypto.randomUUID();
     const locationSql = buildLocationSql(address.location);
-    const [record] = await prisma.$queryRaw<AddressRow[]>(Prisma.sql`
+    const db = (tx as Prisma.TransactionClient) ?? prisma;
+    const [record] = await db.$queryRaw<AddressRow[]>(Prisma.sql`
       INSERT INTO addresses (id, user_id, street, street_number, neighborhood, city, province, postal_code, country, location, created_at, updated_at)
       VALUES (
         ${id},
@@ -44,13 +46,14 @@ export class PrismaAddressRepository implements AddressRepository {
     return toDomain(record);
   }
 
-  async update(address: Address): Promise<Address> {
+  async update(address: Address, tx?: TransactionContext): Promise<Address> {
     if (!address.id) {
       throw new Error("Address id is required for update");
     }
 
     const locationSql = buildLocationSql(address.location);
-    const [record] = await prisma.$queryRaw<AddressRow[]>(Prisma.sql`
+    const db = (tx as Prisma.TransactionClient) ?? prisma;
+    const [record] = await db.$queryRaw<AddressRow[]>(Prisma.sql`
       UPDATE addresses
       SET
         user_id = ${address.userId},
@@ -83,8 +86,9 @@ export class PrismaAddressRepository implements AddressRepository {
     return toDomain(record);
   }
 
-  async delete(id: string): Promise<void> {
-    await prisma.address.delete({ where: { id } });
+  async delete(id: string, tx?: TransactionContext): Promise<void> {
+    const db = (tx as Prisma.TransactionClient) ?? prisma;
+    await db.address.delete({ where: { id } });
   }
 
   async findById(id: string): Promise<Address | null> {

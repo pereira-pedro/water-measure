@@ -1,6 +1,6 @@
-import { User } from "../models/user";
+import { RegistrationData } from "../valueobject/registration-data";
 
 export type StartRegistrationResult = {
   token: string;
-  user: User;
+  registrationData: RegistrationData;
 };

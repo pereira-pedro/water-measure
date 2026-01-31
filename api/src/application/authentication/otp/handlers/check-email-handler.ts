@@ -33,7 +33,7 @@ export class CheckOtpEmailHandler {
       return { isValid: true, user, token: awt.token } as CheckOtpResult;
     }
 
-    return this.startUserRegistration(cmd.email);
+    return { isValid: true } as CheckOtpResult;
   }
 
   private async checkOtp(email: string, otp: string): Promise<boolean> {
@@ -44,13 +44,5 @@ export class CheckOtpEmailHandler {
 
   private async findUserByEmail(email: string): Promise<User | null> {
     return await this.userRepository.findByEmail(email);
-  }
-
-  private async startUserRegistration(email: string): Promise<CheckOtpResult> {
-    return new StartRegistrationHandler(this.cacheGateway)
-      .execute({ email } as StartRegistrationCommand)
-      .then((registration) => {
-        return { isValid: true, registration } as CheckOtpResult;
-      });
   }
 }

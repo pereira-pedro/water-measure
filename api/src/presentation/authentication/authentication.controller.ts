@@ -6,12 +6,15 @@ import { CheckOtpEmailRequest } from "./dto/check-otp-email.request";
 import { CheckOtpEmailCommand } from "src/application/authentication/otp/commands/check-email-command";
 import { CheckOtpEmailHandler } from "src/application/authentication/otp/handlers/check-email-handler";
 import { SendOtpEmailRequest } from "./dto/send-otp-email.request";
-import { StartRegistrationRequest } from "./dto/start-registration-request";
+import { CreateRegistrationRequest } from "./dto/create-registration-request";
+import { UpdateRegistrationRequest } from "./dto/update-registration-request";
 import { StartRegistrationCommand } from "src/application/authentication/registration/commands/start-registration.command";
 import { StartRegistrationHandler } from "src/application/authentication/registration/handlers/start-registration.handler";
 import { UpdateRegistrationHandler } from "src/application/authentication/registration/handlers/update-registration.handler";
 import { CommitRegistrationHandler } from "src/application/authentication/registration/handlers/commit-registration.handler";
-import { UpdateRegistrationRequest } from "./dto/update-registration-request";
+import { RegistrationData } from "src/domain/authentication/valueobject/registration-data";
+import { CommitRegistrationCommand } from "src/application/authentication/registration/commands/commit-registration.command";
+import { UpdateRegistrationCommand } from "src/application/authentication/registration/commands/update-registration.command";
 
 @Public()
 @Controller("auth")
@@ -50,9 +53,11 @@ export class AuthenticationController {
   }
 
   @Post("registration")
-  async startRegistration(@Body() request: StartRegistrationRequest) {
+  async startRegistration(@Body() request: CreateRegistrationRequest) {
     const command: StartRegistrationCommand = {
-      email: request.email,
+      user: request.user,
+      address: request.address,
+      agreedToTerms: request.agreedToTerms || false,
     };
 
     return await this.startRegistrationHandler.execute(command);
@@ -60,19 +65,23 @@ export class AuthenticationController {
 
   @Put("registration/:token/update")
   async updateRegistration(@Param("token") token: string, @Body() request: UpdateRegistrationRequest) {
-    const command = {
+    const command: UpdateRegistrationCommand = {
       token,
-      data: request,
+      data: {
+        user: request.user,
+        address: request.address,
+        agreedToTerms: request.agreedToTerms ?? undefined,
+      } as RegistrationData,
+      canCommit: request.canCommit,
     };
 
     return await this.updateRegistrationHandler.execute(command);
   }
 
   @Put("registration/:token/commit")
-  async commitRegistration(@Param("token") token: string, @Body() request: UpdateRegistrationRequest) {
-    const command = {
+  async commitRegistration(@Param("token") token: string) {
+    const command: CommitRegistrationCommand = {
       token,
-      data: request,
     };
 
     return await this.commitRegistrationHandler.execute(command);

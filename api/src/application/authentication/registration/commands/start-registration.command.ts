@@ -1,3 +1,5 @@
-export type StartRegistrationCommand  = {
-  email: string;
+export type StartRegistrationCommand = {
+  user: any;
+  address?: any;
+  agreedToTerms: boolean;
 };

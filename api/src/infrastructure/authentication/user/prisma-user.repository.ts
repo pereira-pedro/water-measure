@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { prisma } from "@acme/db";
+import { Prisma, prisma } from "@acme/db";
 import { UserRepository } from "../../../domain/authentication/ports/user-repository";
 import { User } from "../../../domain/authentication/models/user";
+import { TransactionContext } from "../../../domain/transaction/ports/transaction-manager";
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -16,8 +17,14 @@ export class PrismaUserRepository implements UserRepository {
     return record ? toDomain(record) : null;
   }
 
-  async create(user: User): Promise<User> {
-    const record = await prisma.user.create({
+  async findAll(): Promise<User[]> {
+    const records = await prisma.user.findMany();
+    return records.map(toDomain);
+  }
+
+  async create(user: User, tx?: TransactionContext): Promise<User> {
+    const db = (tx as Prisma.TransactionClient) ?? prisma;
+    const record = await db.user.create({
       data: {
         fullName: user.fullName,
         email: user.email,
@@ -27,12 +34,18 @@ export class PrismaUserRepository implements UserRepository {
     return toDomain(record);
   }
 
-  async update(user: User): Promise<User> {
+  async delete(id: string, tx?: TransactionContext): Promise<void> {
+    const db = (tx as Prisma.TransactionClient) ?? prisma;
+    await db.user.delete({ where: { id } });
+  }
+
+  async update(user: User, tx?: TransactionContext): Promise<User> {
     if (!user.id) {
       throw new Error("User id is required for update");
     }
 
-    const record = await prisma.user.update({
+    const db = (tx as Prisma.TransactionClient) ?? prisma;
+    const record = await db.user.update({
       where: { id: user.id },
       data: {
         fullName: user.fullName,
