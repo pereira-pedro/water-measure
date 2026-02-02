@@ -4,8 +4,8 @@ import { UpdateUserHandler } from "../../application/authentication/user/handler
 import { DeleteUserHandler } from "../../application/authentication/user/handlers/delete-user.handler";
 import { GetUserByIdHandler } from "../../application/authentication/user/handlers/get-user-by-id.handler";
 import { ListUsersHandler } from "../../application/authentication/user/handlers/list-users.handler";
-import { CreateUserRequest } from "./dto/create-user.request";
-import { UpdateUserRequest } from "./dto/update-user.request";
+import { CreateUserRequest } from "./requests/create-user.request";
+import { UpdateUserRequest } from "./requests/update-user.request";
 
 @Controller("users")
 export class UserController {

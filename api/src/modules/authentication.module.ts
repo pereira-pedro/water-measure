@@ -24,6 +24,7 @@ import { PrismaAddressRepository } from "src/infrastructure/address/prisma-addre
 import { GeocodeAddressHandler } from "src/application/geolocation/handlers/geocode-address.handler";
 import { GEOCODING_GATEWAY } from "src/domain/geolocation/ports/geocoding-gateway";
 import { GoogleMapsGeocodingAdapter } from "src/infrastructure/geolocation/google-maps/adapter";
+import { GetUserByEmailHandler } from "src/application/authentication/user/handlers/get-user-by-email.handler";
 
 @Module({
   imports: [CacheModule, EmailNotificationModule, TransactionModule],
@@ -44,6 +45,7 @@ import { GoogleMapsGeocodingAdapter } from "src/infrastructure/geolocation/googl
     CreateAddressHandler,
     CreateTokenHandler,
     VerifyTokenHandler,
+    GetUserByEmailHandler,
     {
       provide: USER_REPOSITORY,
       useClass: PrismaUserRepository,

@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsBoolean, IsNotEmpty, IsOptional, ValidateNested } from "class-validator";
-import { CreateAddressRequest } from "src/presentation/address/dto/create-address.request";
-import { CreateUserRequest } from "src/presentation/user/dto/create-user.request";
+import { CreateAddressRequest } from "src/presentation/address/requests/create-address.request";
+import { CreateUserRequest } from "src/presentation/user/requests/create-user.request";
 
 export class CreateRegistrationRequest {
   @IsNotEmpty({ message: "user is required" })

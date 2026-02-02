@@ -2,19 +2,19 @@ import { BadRequestException, Body, Controller, Post, Put, Param } from "@nestjs
 import { Public } from "../common/decorators/public.decorator";
 import { SendOtpEmailCommand } from "../../application/authentication/otp/commands/send-email-command";
 import { SendOtpEmailHandler } from "../../application/authentication/otp/handlers/send-email-handler";
-import { CheckOtpEmailRequest } from "./dto/check-otp-email.request";
-import { CheckOtpEmailCommand } from "src/application/authentication/otp/commands/check-email-command";
-import { CheckOtpEmailHandler } from "src/application/authentication/otp/handlers/check-email-handler";
-import { SendOtpEmailRequest } from "./dto/send-otp-email.request";
-import { CreateRegistrationRequest } from "./dto/create-registration-request";
-import { UpdateRegistrationRequest } from "./dto/update-registration-request";
-import { StartRegistrationCommand } from "src/application/authentication/registration/commands/start-registration.command";
-import { StartRegistrationHandler } from "src/application/authentication/registration/handlers/start-registration.handler";
-import { UpdateRegistrationHandler } from "src/application/authentication/registration/handlers/update-registration.handler";
-import { CommitRegistrationHandler } from "src/application/authentication/registration/handlers/commit-registration.handler";
-import { RegistrationData } from "src/domain/authentication/valueobject/registration-data";
-import { CommitRegistrationCommand } from "src/application/authentication/registration/commands/commit-registration.command";
-import { UpdateRegistrationCommand } from "src/application/authentication/registration/commands/update-registration.command";
+import { CheckOtpEmailRequest } from "./requests/check-otp-email.request";
+import { CheckOtpEmailCommand } from "../../application/authentication/otp/commands/check-email-command";
+import { CheckOtpEmailHandler } from "../../application/authentication/otp/handlers/check-email-handler";
+import { SendOtpEmailRequest } from "./requests/send-otp-email.request";
+import { CreateRegistrationRequest } from "./requests/create-registration-request";
+import { UpdateRegistrationRequest } from "./requests/update-registration-request";
+import { StartRegistrationCommand } from "../../application/authentication/registration/commands/start-registration.command";
+import { StartRegistrationHandler } from "../../application/authentication/registration/handlers/start-registration.handler";
+import { UpdateRegistrationHandler } from "../../application/authentication/registration/handlers/update-registration.handler";
+import { CommitRegistrationHandler } from "../../application/authentication/registration/handlers/commit-registration.handler";
+import { RegistrationData } from "../../domain/authentication/valueobject/registration-data";
+import { CommitRegistrationCommand } from "../../application/authentication/registration/commands/commit-registration.command";
+import { UpdateRegistrationCommand } from "../../application/authentication/registration/commands/update-registration.command";
 
 @Public()
 @Controller("auth")

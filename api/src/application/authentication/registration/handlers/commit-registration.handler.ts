@@ -20,7 +20,7 @@ export class CommitRegistrationHandler {
     const registrationData = await this.fetchRegistrationHandler.execute({ token: cmd.token });
 
     if (!registrationData.agreedToTerms) {
-      throw new NotAgreedToTermsException(cmd.token);
+      throw new NotAgreedToTermsException();
     }
 
     return this.transactionManager.run(async (tx) => {

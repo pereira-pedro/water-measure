@@ -4,8 +4,8 @@ import { UpdateAddressHandler } from "../../application/address/handlers/update-
 import { DeleteAddressHandler } from "../../application/address/handlers/delete-address.handler";
 import { GetAddressByIdHandler } from "../../application/address/handlers/get-address-by-id.handler";
 import { ListAddressesHandler } from "../../application/address/handlers/list-addresses.handler";
-import { CreateAddressRequest } from "./dto/create-address.request";
-import { UpdateAddressRequest } from "./dto/update-address.request";
+import { CreateAddressRequest } from "./requests/create-address.request";
+import { UpdateAddressRequest } from "./requests/update-address.request";
 
 @Controller("addresses")
 export class AddressController {
@@ -70,6 +70,7 @@ export class AddressController {
       neighborhood: request.neighborhood ?? null,
       city: request.city,
       province: request.province,
+      postalCode: request.postalCode,
       country: request.country,
       latitude: request.latitude ?? null,
       longitude: request.longitude ?? null,
