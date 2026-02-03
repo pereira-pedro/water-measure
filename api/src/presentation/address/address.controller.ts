@@ -78,8 +78,13 @@ export class AddressController {
   }
 
   @Delete(":id")
-  async delete(@Param("id") id: string) {
-    await this.deleteAddressHandler.execute({ id });
-    return { ok: true };
+  async delete(@Param("id") id: string, @Req() req: any) {
+    const userId = req?.authToken?.userId;
+    if (!userId) {
+      throw new UnauthorizedException("Missing auth token");
+    }
+
+    const deletedCount = await this.deleteAddressHandler.execute({ id, userId });
+    return { deleted: deletedCount };
   }
 }

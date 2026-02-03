@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { Address } from "../../../domain/address/models/address";
 import { ADDRESS_REPOSITORY, AddressRepository } from "../../../domain/address/ports/address-repository";
+import { AddressNotFoundException } from "../../../domain/address/exceptions/address-not-found.exception";
 import { GeocodeAddressHandler } from "../../geolocation/handlers/geocode-address.handler";
 import { UpdateAddressCommand } from "../commands/update-address.command";
 
@@ -14,7 +15,7 @@ export class UpdateAddressHandler {
   async execute(cmd: UpdateAddressCommand): Promise<Address> {
     const existing = await this.addressRepository.findById(cmd.id);
     if (!existing) {
-      throw new Error(`Address not found: ${cmd.id}`);
+      throw new AddressNotFoundException(cmd.id);
     }
 
     const location = await resolveLocation(this.geocodeAddressHandler, cmd, existing);

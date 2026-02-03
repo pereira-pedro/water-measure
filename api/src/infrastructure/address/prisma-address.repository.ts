@@ -4,6 +4,7 @@ import { Prisma, prisma } from "@acme/db";
 import { Address, AddressLocation } from "../../domain/address/models/address";
 import { AddressRepository } from "../../domain/address/ports/address-repository";
 import { TransactionContext } from "../../domain/transaction/ports/transaction-manager";
+import { AddressNotFoundException } from "src/domain/address/exceptions/address-not-found.exception";
 
 @Injectable()
 export class PrismaAddressRepository implements AddressRepository {
@@ -86,9 +87,14 @@ export class PrismaAddressRepository implements AddressRepository {
     return toDomain(record);
   }
 
-  async delete(id: string, tx?: TransactionContext): Promise<void> {
+  async delete(id: string, tx?: TransactionContext): Promise<number> {
     const db = (tx as Prisma.TransactionClient) ?? prisma;
-    await db.address.delete({ where: { id } });
+    const result = await db.address.deleteMany({ where: { id } });
+
+    if (result.count === 0) {
+      throw new AddressNotFoundException(id);
+    }
+    return result.count;
   }
 
   async findById(id: string): Promise<Address | null> {
@@ -139,6 +145,11 @@ export class PrismaAddressRepository implements AddressRepository {
     `);
 
     return records.map(toDomain);
+  }
+
+  async countByUserId(userId: string, tx?: TransactionContext): Promise<number> {
+    const db = (tx as Prisma.TransactionClient) ?? prisma;
+    return db.address.count({ where: { userId } });
   }
 }
 
