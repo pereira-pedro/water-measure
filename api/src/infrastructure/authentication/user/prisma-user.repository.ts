@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Prisma, prisma } from "@acme/db";
 import { UserRepository } from "../../../domain/authentication/ports/user-repository";
 import { User } from "../../../domain/authentication/models/user";
+import { Address } from "../../../domain/address/models/address";
 import { TransactionContext } from "../../../domain/transaction/ports/transaction-manager";
 
 @Injectable()
@@ -9,6 +10,21 @@ export class PrismaUserRepository implements UserRepository {
   async findById(id: string): Promise<User | null> {
     const record = await prisma.user.findUnique({ where: { id } });
     return record ? toDomain(record) : null;
+  }
+
+  async findByIdWithAddresses(id: string): Promise<{ user: User; addresses: Address[] } | null> {
+    const record = await prisma.user.findUnique({
+      where: { id },
+      include: { addresses: true },
+    });
+
+    if (!record) {
+      return null;
+    }
+
+    const user = toDomain(record);
+    const addresses = record.addresses.map(toAddressDomain);
+    return { user, addresses };
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -62,6 +78,35 @@ function toDomain(record: { id: string; fullName: string; email: string; created
     id: record.id,
     fullName: record.fullName,
     email: record.email,
+    createdAt: record.createdAt,
+    updatedAt: record.updatedAt,
+  });
+}
+
+function toAddressDomain(record: {
+  id: string;
+  userId: string;
+  street: string;
+  street_number: string;
+  neighborhood: string | null;
+  city: string;
+  province: string;
+  postal_code: string;
+  country: string;
+  createdAt: Date;
+  updatedAt: Date;
+}): Address {
+  return Address.create({
+    id: record.id,
+    userId: record.userId,
+    street: record.street,
+    streetNumber: record.street_number,
+    neighborhood: record.neighborhood,
+    city: record.city,
+    province: record.province,
+    postalCode: record.postal_code,
+    country: record.country,
+    location: null,
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
   });

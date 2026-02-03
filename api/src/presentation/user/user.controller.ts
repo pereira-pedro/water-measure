@@ -6,6 +6,7 @@ import { GetUserByIdHandler } from "../../application/authentication/user/handle
 import { ListUsersHandler } from "../../application/authentication/user/handlers/list-users.handler";
 import { CreateUserRequest } from "./requests/create-user.request";
 import { UpdateUserRequest } from "./requests/update-user.request";
+import { UserPresenter } from "./presenters/user.presenter";
 
 @Controller("users")
 export class UserController {
@@ -32,7 +33,13 @@ export class UserController {
 
   @Get(":id")
   async getById(@Param("id") id: string) {
-    return this.getUserByIdHandler.execute({ id });
+    const response = await this.getUserByIdHandler.execute({ id });
+
+    if (!response) {
+      return null;
+    }
+
+    return new UserPresenter(response);
   }
 
   @Put(":id")
